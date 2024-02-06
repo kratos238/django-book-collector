@@ -38,3 +38,7 @@ class ReadingSession(models.Model):
 
     class Meta:
         ordering = ['-date']
+
+class Tag(models.Model):
+    name = models.CharField(max_length=40, unique=True)
+    description = models.TextField(blank=True)

@@ -2,8 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from rest_framework import generics
-from .models import Book, ReadingSession
-from .serializers import BookSerializer, ReadingSessionSerializer
+from .models import Book, ReadingSession, Tag
+from .serializers import BookSerializer, ReadingSessionSerializer, TagSerializer
 
 # Define the home view
 class Home(APIView):
@@ -40,3 +40,13 @@ class ReadingSessionDetail(generics.RetrieveUpdateDestroyAPIView):
   def get_queryset(self):
     book_id = self.kwargs['book_id']
     return ReadingSession.objects.filter(book_id=book_id)
+  
+
+class TagList(generics.ListCreateAPIView):
+  queryset = Tag.objects.all()
+  serializer_class = TagSerializer
+
+class TagDetail(generics.RetrieveUpdateDestroyAPIView):
+  queryset = Tag.objects.all()
+  serializer_class = TagSerializer
+  lookup_field = 'id'
