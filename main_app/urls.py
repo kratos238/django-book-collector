@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import Home, BookList, BookDetail, ReadingSessionCreate, ReadingSessionDetail, TagList, TagDetail, AddTagToBook, RemoveTagFromBook
+from .views import Home, BookList, BookDetail, ReadingSessionCreate, ReadingSessionDetail, TagList, TagDetail, AddTagToBook, RemoveTagFromBook, CreateUserView, LoginView, VerifyUserView
 
 urlpatterns = [
     path('', Home.as_view(), name='home'),
@@ -11,4 +11,7 @@ urlpatterns = [
     path('tags/<int:id>/',TagDetail.as_view(), name='tag-detail'),
     path('books/<int:book_id>/add_tag/<int:tag_id>/', AddTagToBook.as_view(), name='add-tag-to-book'),
     path('books/<int:book_id>/remove_tag/<int:tag_id>/', RemoveTagFromBook.as_view(), name='remove-tag-from-book'),
+    path('users/register/', CreateUserView.as_view(), name='register'),
+    path('users/login/', LoginView.as_view(), name='login'),
+    path('users/token/refresh/', VerifyUserView.as_view(), name='token_refresh'),
 ]
