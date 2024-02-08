@@ -21,6 +21,20 @@ class BookDetail(generics.RetrieveUpdateDestroyAPIView):
   serializer_class = BookSerializer
   lookup_field = 'id'
 
+  # add (override) the retrieve method below
+  def retrieve(self, request, *args, **kwargs):
+    instance = self.get_object()
+    serializer = self.get_serializer(instance)
+
+    # Get the list of toys not associated with this cat
+    tags_not_associated = Tag.objects.exclude(id__in=instance.tags.all())
+    tags_serializer = TagSerializer(tags_not_associated, many=True)
+
+    return Response({
+        'book': serializer.data,
+        'tags_not_associated': tags_serializer.data
+    })
+
 class ReadingSessionCreate(generics.ListCreateAPIView):
   serializer_class = ReadingSessionSerializer
 
@@ -50,3 +64,18 @@ class TagDetail(generics.RetrieveUpdateDestroyAPIView):
   queryset = Tag.objects.all()
   serializer_class = TagSerializer
   lookup_field = 'id'
+
+class AddTagToBook(APIView):
+  def post(self, request, book_id, tag_id):
+    book = Book.objects.get(id=book_id)
+    tag = Tag.objects.get(id=tag_id)
+    book.tags.add(tag)
+    return Response({'message': f'Book {tag.name} added to book {book.title}'})
+
+
+class RemoveTagFromBook(APIView):
+  def post(self, request, book_id, tag_id):
+    book = Book.objects.get(id=book_id)
+    tag = Tag.objects.get(id=tag_id)
+    book.tags.remove(tag)
+    return Response({'message': f'Book {tag.name} removed from book {book.title}'})

@@ -11,16 +11,20 @@ MOODS = (
 
 
 # Create your models here.
+class Tag(models.Model):
+    name = models.CharField(max_length=40, unique=True)
+    description = models.TextField(blank=True)
+
 class Book(models.Model):
     title = models.CharField(max_length=100)
     genre= models.CharField(max_length=100)
     summary = models.TextField(max_length=250)
     release = models.IntegerField()
+    tags = models.ManyToManyField(Tag)
 
     def __str__(self):
       return self.title
     
-
 
 class ReadingSession(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reading_sessions')
@@ -39,6 +43,3 @@ class ReadingSession(models.Model):
     class Meta:
         ordering = ['-date']
 
-class Tag(models.Model):
-    name = models.CharField(max_length=40, unique=True)
-    description = models.TextField(blank=True)
